@@ -1,0 +1,3 @@
+[submodule "pulp-and-paper/vendor/CoolProp"]
+	path = pulp-and-paper/vendor/CoolProp
+	url = https://github.com/CoolProp/CoolProp.git
