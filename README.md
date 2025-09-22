@@ -70,7 +70,7 @@ For debugging with GDB:
 ```bash
 cmake -DCMAKE_BUILD_TYPE=Debug ..
 make
-gdb ./sandbox/sandbox_executable
+gdb ./sandbox/sandbox
 ```
 
 ## Quick Start
