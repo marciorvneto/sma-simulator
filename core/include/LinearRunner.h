@@ -1,4 +1,5 @@
 #pragma once
+#include "Connectivity.h"
 #include "Runner.h"
 
 class LinearRunner : public Runner {

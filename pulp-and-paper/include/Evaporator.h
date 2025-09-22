@@ -2,19 +2,26 @@
 #include "CalculationBlock.h"
 #include <string>
 
-struct EvaporatorParams {
-  double heatTransferArea;
-  double heatLoad;
-  double globalHeatTransferCoefficient;
-  double pipeDiameter;
-};
-
 class Evaporator : public CalculationBlock {
+public:
+  class MethodGivenOutletPressure : public CalculationMethod {
+  public:
+    MethodGivenOutletPressure(const Ref<CalculationBlock> &parent);
+    void Calculate() override;
+  };
+
+  class MethodGivenInletData : public CalculationMethod {
+  public:
+    MethodGivenInletData(const Ref<CalculationBlock> &parent);
+    void Calculate() override;
+  };
+
 private:
-  EvaporatorParams params;
+  void InitializePins();
+  void SetDefaultCalculationMethod();
 
 public:
   Evaporator(const std::string &id);
-  Evaporator(const std::string &id, EvaporatorParams params);
+  Evaporator(const std::string &id, ParamsMap params);
   void Calculate() override;
 };
