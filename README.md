@@ -81,40 +81,71 @@ The `sandbox/src/main.cpp` provides a complete example of setting up and running
 #include "Evaporator.h"
 #include "Ref.h"
 #include "Simulator.h"
+#include <iostream>
+#include <vector>
 
 int main() {
   Simulator sim;
   
   // Create evaporator E1
   Ref<CalculationBlock> e1(new Evaporator("E1", {
-    {"A", 2100},    // Area
+    {"A", 2100},    // Heat transfer area
     {"Q", 12000},   // Heat duty
     {"U", 0.5},     // Heat transfer coefficient
     {"D", 25e-3},   // Diameter
   }));
   
-  // Set input conditions
+  // Set E1 input conditions
   e1->SetInputPinValue("S", "m", 4.0);    // Steam mass flow
   e1->SetInputPinValue("S", "P", 1.1);    // Steam pressure
   e1->SetInputPinValue("F", "T", 86.93);  // Feed temperature
   e1->SetInputPinValue("F", "m", 8.21);   // Feed mass flow
   e1->SetInputPinValue("F", "x", 0.14);   // Feed concentration
   
-  // Set calculation method
   e1->SetCalculationMethod(
     Ref<CalculationMethod>(new Evaporator::MethodGivenInletData(e1))
   );
   
-  // Create connections between units
-  std::vector<Ref<Connector>> conns = {
-    Ref<Connector>("E1", "V", "E2", "S"),  // Vapor from E1 to steam of E2
-    Ref<Connector>("E2", "L", "E1", "F")   // Liquid from E2 to feed of E1
-  };
+  // Create evaporator E2
+  Ref<CalculationBlock> e2(new Evaporator("E2", {
+    {"A", 2500},    // Heat transfer area
+    {"Q", 12000},   // Heat duty
+    {"U", 0.5},     // Heat transfer coefficient
+    {"D", 25e-3},   // Diameter
+  }));
+  
+  // Set E2 input conditions
+  e2->SetInputPinValue("S", "m", 3.9);    // Steam mass flow
+  e2->SetInputPinValue("S", "P", 0.7);    // Steam pressure
+  e2->SetInputPinValue("F", "T", 25);     // Feed temperature
+  e2->SetInputPinValue("F", "m", 12);     // Feed mass flow
+  e2->SetInputPinValue("F", "x", 0.1);    // Feed concentration
+  
+  e2->SetCalculationMethod(
+    Ref<CalculationMethod>(new Evaporator::MethodGivenInletData(e2))
+  );
+  
+  // Add blocks to simulation
+  std::vector<Ref<CalculationBlock>> blocks = {};
+  blocks.push_back(e1);
+  blocks.push_back(e2);
+  
+  // Create connections between units (recycle configuration)
+  std::vector<Ref<Connector>> conns = {};
+  Ref<Connector> V1("E1", "V", "E2", "S");  // Vapor from E1 to steam of E2
+  Ref<Connector> L2("E2", "L", "E1", "F");  // Liquid from E2 to feed of E1
+  
+  // Mark tear stream for convergence
+  V1->MarkAsTearStream(true);
+  
+  conns.push_back(V1);
+  conns.push_back(L2);
   
   // Run simulation
   sim.Run(blocks, conns);
   
   // Print results
+  std::cout << ">>> Results: " << std::endl;
   for (auto &block : blocks) {
     block->PrintAllValues();
   }
@@ -191,8 +222,8 @@ Create a new subdirectory similar to `pulp-and-paper/` with:
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/marciorvneto/sma-simulator/blob/main/LICENSE) file for details.
 
 ## Support
 
-For questions and support, please [create an issue](link-to-issues) or contact [maintainer-email].
+For questions and support, please create an issue or contact [marciorvneto@gmail.com].
