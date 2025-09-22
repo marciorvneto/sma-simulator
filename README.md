@@ -220,6 +220,21 @@ Create a new subdirectory similar to `pulp-and-paper/` with:
 4. Ensure all builds pass
 5. Submit a pull request
 
+## Acknowledgments
+
+I'd like to thank the following contributors and their valuable work that helped shape this simulator:
+
+- **Neto, M. R. V.**, Cardoso, M., Sermyagina, E., Vakkilainen, E. K., & Oliveira, E. D. (2022). Designing a sequential-modular steady-state simulator for kraft recovery cycle evaporative systems. *O PAPEL*, *83*(3), 72-77.
+
+- **Neto, M. R. V.**, Cardoso, M., Vakkilainen, E. K., & Oliveira, É. D. (2020). Development of an equation-oriented steady-state evaporation plant simulator. *O PAPEL*, *81*(07), 83-89.
+
+### Third-Party Libraries
+
+- **CoolProp IF97**: Steam and water properties calculations  
+  Repository: https://github.com/CoolProp/IF97  
+  Thank you to the CoolProp maintainers for providing this excellent implementation of the IAPWS-IF97 industrial formulation.
+
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/marciorvneto/sma-simulator/blob/main/LICENSE) file for details.
